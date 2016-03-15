@@ -1,0 +1,27 @@
+{
+  "name": "nervousnet-hackathon",
+  "version": "0.0.1",
+  "description": "NervousNet Hackathon 2016",
+  "main": "app.js",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/pablovem/nervousnet-hackathon.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pablovem",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.4.7",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-sass": "^2.2.0"
+  }
+}
