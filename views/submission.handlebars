@@ -1,0 +1,19 @@
+{{> navbar }}
+
+<div class="container">
+  <div class="page-header">
+    <h1>Submission <small>route</small></h1>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <form role="form" id="submForm" action="/api/submission" method="post" enctype="multipart/form-data">
+        <label>Upload .zip</label>
+        <input type="file" id="file" name="submission">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{> footer }}
