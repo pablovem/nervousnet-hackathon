@@ -1,9 +1,14 @@
 var fs = require('fs');
+var path = require('path');
 var multer  = require('multer');
+var DecompressZip = require('decompress-zip');
+
 var express = require('express');
 var router = express.Router();
+
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+
 var passport = require('passport');
 
 function checkDirectorySync(directory) {
@@ -21,11 +26,19 @@ var storage = multer.diskStorage({
     cb(null, teampath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    cb(null, file.fieldname + '-' + req.user.username + '.zip')
   }
 });
 
-var upload = multer({ storage: storage }).single('submission');
+var upload = multer({
+                      storage: storage,
+                      fileFilter: function (req, file, cb) {
+                        if (path.extname(file.originalname) !== '.zip') {
+                          return cb(new Error('Only .zip are allowed'))
+                        }
+                        cb(null, true)
+                      }
+                    }).single('submission');
 
 /* General Routes */
 router.get('/', function (req, res, next) {
@@ -84,12 +97,22 @@ router.post('/api/submission', function(req,res) {
   console.log(req.user);
   upload(req, res, function (err) {
     if(err) {
-      return res.end("Error uploading file.");
+      console.log(err);
+      return res.end("Error uploading file. " + err);
     }
 
-    // add submission to model
+    // extract files from .zip
+    var unzipper = new DecompressZip('./data/' + req.user.username + '/submission-' + req.user.username + '.zip');
+    unzipper.on('extract', function () {
+      console.log("Finished extracting");
+    });
+    unzipper.on('progress', function (fileIndex, fileCount) {
+      console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+    });
+    unzipper.extract({ path: './data/' + req.user.username});
 
-    res.end("File has been uploaded");
+
+    res.end("Submission has been uploaded");
   })
 });
 
