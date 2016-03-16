@@ -1,2 +1,2 @@
 // Models index
-exports.Team = require('./team');
+exports.User = require('./user');
