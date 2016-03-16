@@ -4,6 +4,9 @@ var rmdir = require('rimraf');
 var multer  = require('multer');
 var DecompressZip = require('decompress-zip');
 
+const child = require('child_process');
+var exec = require('child_process').exec;
+
 var express = require('express');
 var router = express.Router();
 
@@ -26,6 +29,19 @@ function checkDirectorySync(directory) {
     });
     unzipdeps.extract({ path: directory});
   }
+}
+
+function runAnalyser(directory) {
+  //child.spawn('java', ['-jar', directory + 'analyser.jar']);
+  console.log('Running Analyser');
+  exec('java -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    console.log(directory + ' Analyser stdout: ' + stdout);
+    console.log(directory + ' Analyser stderr: ' + stderr);
+  });
 }
 
 var storage = multer.diskStorage({
@@ -101,7 +117,7 @@ router.get('/api/logout', function (req, res, next) {
 });
 
 router.post('/api/submission', function(req,res) {
-  var teampath = './data/' + req.user.username
+  var teampath = './data/' + req.user.username + '/';
 
   rmdir(teampath, function(err) {
     if (err) {
@@ -110,6 +126,7 @@ router.post('/api/submission', function(req,res) {
     }
 
     console.log(teampath + 'has been deleted');
+
     checkDirectorySync(teampath);
 
     upload(req, res, function (err) {
@@ -121,10 +138,11 @@ router.post('/api/submission', function(req,res) {
       // extract Submission files from .zip
       var unzipper = new DecompressZip('./data/' + req.user.username + '/submission-' + req.user.username + '.zip');
       unzipper.on('extract', function () {
-        console.log("Finished extracting");
+        console.log("Submission files have been extracted");
+        runAnalyser(teampath);
       });
       unzipper.on('progress', function (fileIndex, fileCount) {
-        console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+        //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
       });
       unzipper.extract({ path: './data/' + req.user.username});
 
