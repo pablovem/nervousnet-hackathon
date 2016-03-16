@@ -1,3 +1,4 @@
+var fs = require('fs');
 var multer  = require('multer');
 var express = require('express');
 var router = express.Router();
@@ -5,9 +6,19 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var passport = require('passport');
 
+function checkDirectorySync(directory) {
+  try {
+    fs.statSync(directory);
+  } catch(e) {
+    fs.mkdirSync(directory);
+  }
+}
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './data/')
+    var teampath = './data/' + req.user.username;
+    checkDirectorySync(teampath);
+    cb(null, teampath);
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now())
@@ -70,10 +81,14 @@ router.get('/api/logout', function (req, res, next) {
 
 router.post('/api/submission', function(req,res) {
   // Update submission
+  console.log(req.user);
   upload(req, res, function (err) {
     if(err) {
       return res.end("Error uploading file.");
     }
+
+    // add submission to model
+
     res.end("File has been uploaded");
   })
 });
