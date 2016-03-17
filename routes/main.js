@@ -93,6 +93,11 @@ router.get('/leaderboard', function (req, res, next) {
   res.render('leaderboard', { user : req.user });
 });
 
+router.get('/profile', function (req, res, next) {
+  console.log(req.user);
+  res.render('profile', { user : req.user });
+});
+
 /* API */
 router.post('/api/register', function(req, res) {
   var user = new User({

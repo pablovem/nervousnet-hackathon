@@ -1,0 +1,45 @@
+{{> navbar }}
+
+<div class="container">
+  <div class="page-header">
+    <h1>{{user.username}} <small>profile</small></h1>
+    <p>{{user.email}}</p>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Submissions</div>
+          <div class="panel-body">
+            <p>Your team has submitted {{user.meta.submissions}} times.</p>
+          </div>
+          <!-- Table -->
+          <table class="table">
+            <tr>
+              <th>Submission</th>
+              <th>Submitted</th>
+              <th>Entropy</th>
+              <th>Diversity</th>
+              <th>Avg Local Error</th>
+              <th>Global Error</th>
+            </tr>
+            {{#each user.submissions}}
+             <tr>
+               <td>{{this.id}}</td>
+               <td>{{this.submitted_at}}</td>
+               <td>0.0</td>
+               <td>0.0</td>
+               <td>0.0</td>
+               <td>0.0</td>
+             </tr>
+           {{/each}}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{{> footer }}
