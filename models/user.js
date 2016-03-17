@@ -9,7 +9,14 @@ var UserSchema = new Schema({
     email: 				{ type: String, required: true},
     team:         { type: String, required: false},
     created_at: 	{ type: Date, 	required: false, 	default: Date.now},
-    updated_at: 	{ type: Date, 	required: false, 	default: Date.now}
+    submissions: [{
+      id: String,
+      submitted_at: { type: Date, default: Date.now},
+      path: String
+    }],
+    meta: {
+      submissions: { type: Number, default: 0}
+    }
 });
 
 UserSchema.plugin(passportLocalMongoose);

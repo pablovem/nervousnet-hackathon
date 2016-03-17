@@ -20,15 +20,18 @@ function checkDirectorySync(directory) {
     fs.statSync(directory);
   } catch(e) {
     fs.mkdirSync(directory);
-    var unzipdeps = new DecompressZip('./data/deps.zip');
-    unzipdeps.on('extract', function () {
-      console.log("Deps have been extracted");
-    });
-    unzipdeps.on('progress', function (fileIndex, fileCount) {
-      //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
-    });
-    unzipdeps.extract({ path: directory});
   }
+}
+
+function setupDeps(directory) {
+  var unzipdeps = new DecompressZip('./data/deps.zip');
+  unzipdeps.on('extract', function () {
+    console.log("Deps have been extracted");
+  });
+  unzipdeps.on('progress', function (fileIndex, fileCount) {
+    //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+  });
+  unzipdeps.extract({ path: directory});
 }
 
 function runAnalyser(directory) {
@@ -46,11 +49,12 @@ function runAnalyser(directory) {
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    var teampath = './data/' + req.user.username;
+    var submindex = req.user.meta.submissions+1;
+    var teampath = './data/' + req.user.username + '/' + (req.user.meta.submissions+1) + '/';
     cb(null, teampath);
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + req.user.username + '.zip')
+    cb(null, 'submission.zip');
   }
 });
 
@@ -96,14 +100,22 @@ router.post('/api/register', function(req, res) {
     email:    req.body.email
   });
   //console.log(user);
+
+  // Create team folder
+  var teampath = './data/' + user.username + '/';
+
   User.register(user, req.body.password, function(err, user) {
     if (err) {
       return res.render('register', { user: user});
     }
     console.log(user);
+
+    checkDirectorySync(teampath);
+
     passport.authenticate('local')(req,res, function () {
       res.redirect('/');
     });
+
   });
 });
 
@@ -116,40 +128,58 @@ router.get('/api/logout', function (req, res, next) {
   res.redirect('/');
 });
 
-router.post('/api/submission', function(req,res) {
-  var teampath = './data/' + req.user.username + '/';
+router.get('/api/users', function (req, res, next) {
+  User.find({}, function (err, users) {
+    //console.log(users);
+    res.json(users);
+    //res.render('/usersList', {users: users});
+  });
+});
 
-  rmdir(teampath, function(err) {
-    if (err) {
+router.post('/api/submission', function(req,res) {
+  User.findOne({ username : req.user.username}, function (err, user) {
+    var submission = user.meta.submissions + 1;
+    user.meta.submissions = submission;
+    user.submissions.push({
+      id : submission.toString(),
+      path: './data/' + req.user.username + '/' + submission + '/'
+    });
+    //console.log(user);
+    user.save(function (err) {
+      if(err) {
+        console.error('err trying to update submission');
+      }
+    });
+  });
+
+  var submindex = req.user.meta.submissions+1;
+  var teampath = './data/' + req.user.username + '/' + submindex + '/';
+  // check submission folder
+  checkDirectorySync(teampath);
+  // unzip dependencies
+  setupDeps(teampath);
+
+  // upload submission
+  upload(req, res, function (err) {
+    if(err) {
       console.log(err);
-      throw err;
+      return res.end("Error uploading file. " + err);
     }
 
-    console.log(teampath + 'has been deleted');
+    // extract submission files from .zip
+    var unzipper = new DecompressZip('./data/' + req.user.username + '/' + submindex + '/submission.zip');
+    unzipper.on('extract', function () {
+      console.log("Submission files have been extracted");
+      //runAnalyser(teampath);
+    });
+    unzipper.on('progress', function (fileIndex, fileCount) {
+      //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+    });
+    unzipper.extract({ path: './data/' + req.user.username + '/' + submindex + '/'});
 
-    checkDirectorySync(teampath);
+    res.end("Submission has been uploaded");
+  })
 
-    upload(req, res, function (err) {
-      if(err) {
-        console.log(err);
-        return res.end("Error uploading file. " + err);
-      }
-
-      // extract Submission files from .zip
-      var unzipper = new DecompressZip('./data/' + req.user.username + '/submission-' + req.user.username + '.zip');
-      unzipper.on('extract', function () {
-        console.log("Submission files have been extracted");
-        runAnalyser(teampath);
-      });
-      unzipper.on('progress', function (fileIndex, fileCount) {
-        //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
-      });
-      unzipper.extract({ path: './data/' + req.user.username});
-
-      res.end("Submission has been uploaded");
-    })
-
-  });
 });
 
 module.exports = router;
