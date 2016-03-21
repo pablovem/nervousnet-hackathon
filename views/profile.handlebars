@@ -19,6 +19,7 @@
             <tr>
               <th>Submission</th>
               <th>Submitted</th>
+              <th>State</th>
               <th>Entropy</th>
               <th>Diversity</th>
               <th>Avg Local Error</th>
@@ -28,10 +29,11 @@
              <tr>
                <td>{{this.id}}</td>
                <td>{{this.submitted_at}}</td>
-               <td>0.0</td>
-               <td>0.0</td>
-               <td>0.0</td>
-               <td>0.0</td>
+               <td>{{this.state}}</td>
+               <td>{{this.entropy}}</td>
+               <td>{{this.diversity}}</td>
+               <td>{{this.localError}}</td>
+               <td>{{this.globalError}}</td>
              </tr>
            {{/each}}
           </table>

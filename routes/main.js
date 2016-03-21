@@ -1,3 +1,4 @@
+/* Dependencies */
 var fs = require('fs');
 var path = require('path');
 var rmdir = require('rimraf');
@@ -15,6 +16,7 @@ var User = mongoose.model('User');
 
 var passport = require('passport');
 
+/* Functions */
 function checkDirectorySync(directory) {
   try {
     fs.statSync(directory);
@@ -34,16 +36,41 @@ function setupDeps(directory) {
   unzipdeps.extract({ path: directory});
 }
 
-function runAnalyser(directory) {
+function runAnalyser(directory, username) {
   //child.spawn('java', ['-jar', directory + 'analyser.jar']);
   console.log('Running Analyser');
   exec('java -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
     if (err) {
       console.log(err);
+      // Error management
       throw err;
     }
     console.log(directory + ' Analyser stdout: ' + stdout);
     console.log(directory + ' Analyser stderr: ' + stderr);
+    console.log("Analyser finished");
+
+    // Update last submission in model
+    User.findOne({ username : username}, function (err, user) {
+      console.log("Update submission in model");
+      var last_submission = user.meta.submissions - 1;
+      user.submissions[last_submission].state = "Analysed";
+      var rank = require('../' + user.submissions[last_submission].path + 'rankings/rankings.json');
+      user.submissions[last_submission].state = "Analysed";
+      user.submissions[last_submission].entropy = rank.entropy;
+      user.submissions[last_submission].diversity = rank.diversity;
+      user.submissions[last_submission].localError = rank.localError;
+      user.submissions[last_submission].globalError = rank.globalError;
+      user.save(function (err) {
+        if(err) {
+          console.error('error trying to update submission after Analyser');
+        }
+        console.log("Submission updated in model");
+      });
+
+    });
+
+    // Update leaderboard api with ranking stuff
+
   });
 }
 
@@ -94,7 +121,6 @@ router.get('/leaderboard', function (req, res, next) {
 });
 
 router.get('/profile', function (req, res, next) {
-  console.log(req.user);
   res.render('profile', { user : req.user });
 });
 
@@ -142,17 +168,20 @@ router.get('/api/users', function (req, res, next) {
 });
 
 router.post('/api/submission', function(req,res) {
+
+  // Update model with submission
   User.findOne({ username : req.user.username}, function (err, user) {
     var submission = user.meta.submissions + 1;
     user.meta.submissions = submission;
     user.submissions.push({
       id : submission.toString(),
-      path: './data/' + req.user.username + '/' + submission + '/'
+      path: './data/' + req.user.username + '/' + submission + '/',
+      state: "Checking"
     });
     //console.log(user);
     user.save(function (err) {
       if(err) {
-        console.error('err trying to update submission');
+        console.error('error trying to update submission');
       }
     });
   });
@@ -172,18 +201,19 @@ router.post('/api/submission', function(req,res) {
     }
 
     // extract submission files from .zip
-    var unzipper = new DecompressZip('./data/' + req.user.username + '/' + submindex + '/submission.zip');
+    var unzipper = new DecompressZip( teampath + 'submission.zip');
     unzipper.on('extract', function () {
       console.log("Submission files have been extracted");
-      //runAnalyser(teampath);
+      runAnalyser(teampath, req.user.username);
     });
     unzipper.on('progress', function (fileIndex, fileCount) {
       //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
     });
-    unzipper.extract({ path: './data/' + req.user.username + '/' + submindex + '/'});
+    unzipper.extract({ path: teampath});
 
-    res.end("Submission has been uploaded");
-  })
+    //res.end("Submission has been uploaded");
+    res.redirect('/profile');
+  });
 
 });
 
