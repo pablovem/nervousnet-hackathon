@@ -4,14 +4,15 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 // TeamUser Schema definition
 var UserSchema = new Schema({
-    username:       {type: String, required: true},
+    username:       {type: String,  required: true},
     password:       {type: String},
-    email:          {type: String, required: true},
-    team:           {type: String, required: false},
-    created_at:     {type: Date, 	required: false, 	default: Date.now},
+    email:          {type: String,  required: true},
+    role:           {type: String,  default: "Team"},
+    team:           {type: String,  required: false},
+    created_at:     {type: Date,    required: false,  default: Date.now},
     submissions: [{
       id:           {type: String},
-      submitted_at: {type: Date, default: Date.now},
+      submitted_at: {type: Date,  default: Date.now},
       path:         {type: String},
       state:        {type: String},
       entropy:      {type: String},
@@ -20,8 +21,11 @@ var UserSchema = new Schema({
       globalError:  {type: String}
     }],
     meta: {
-      submissions:  {type: Number, default: 0},
-      last_state:   {type: String}
+      submissions:  {type: Number,  default: 0},
+      entropy:      {type: Number},
+      diversity:    {type: Number},
+      localError:   {type: Number},
+      globalError:  {type: Number}
     }
 });
 

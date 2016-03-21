@@ -52,6 +52,7 @@ function runAnalyser(directory, username) {
     // Update last submission in model
     User.findOne({ username : username}, function (err, user) {
       console.log("Update submission in model");
+
       var last_submission = user.meta.submissions - 1;
       user.submissions[last_submission].state = "Analysed";
       var rank = require('../' + user.submissions[last_submission].path + 'rankings/rankings.json');
@@ -60,6 +61,12 @@ function runAnalyser(directory, username) {
       user.submissions[last_submission].diversity = rank.diversity;
       user.submissions[last_submission].localError = rank.localError;
       user.submissions[last_submission].globalError = rank.globalError;
+
+      user.meta.entropy = rank.entropy;
+      user.meta.diversity = rank.diversity;
+      user.meta.localError = rank.localError;
+      user.meta.globalError = rank.globalError;
+
       user.save(function (err) {
         if(err) {
           console.error('error trying to update submission after Analyser');
@@ -68,8 +75,6 @@ function runAnalyser(directory, username) {
       });
 
     });
-
-    // Update leaderboard api with ranking stuff
 
   });
 }
@@ -216,5 +221,46 @@ router.post('/api/submission', function(req,res) {
   });
 
 });
+
+router.get('/api/rank/entropy', function (req, res, next) {
+  User.find({}).
+  where('meta.submissions').gt(0).
+  sort('meta.entropy').limit(5).
+  select('username meta.entropy').
+  exec(function (err, users) {
+    res.json(users);
+  });
+});
+
+router.get('/api/rank/diversity', function (req, res, next) {
+  User.find({}).
+  where('meta.submissions').gt(0).
+  sort('meta.diversity').limit(5).
+  select('username meta.diversity').
+  exec(function (err, users) {
+    res.json(users);
+  });
+});
+
+router.get('/api/rank/localerror', function (req, res, next) {
+  User.find({}).
+  where('meta.submissions').gt(0).
+  sort('meta.localError').limit(5).
+  select('username meta.localError  ').
+  exec(function (err, users) {
+    res.json(users);
+  });
+});
+
+router.get('/api/rank/globalerror', function (req, res, next) {
+  User.find({}).
+  where('meta.submissions').gt(0).
+  sort('meta.globalError').limit(5).
+  select('username meta.globalError').
+  exec(function (err, users) {
+    res.json(users);
+  });
+});
+
 
 module.exports = router;
