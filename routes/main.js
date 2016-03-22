@@ -16,6 +16,8 @@ var User = mongoose.model('User');
 
 var passport = require('passport');
 
+var _ = require('underscore');
+
 /* Functions */
 function checkDirectorySync(directory) {
   try {
@@ -122,7 +124,57 @@ router.get('/submission', function (req, res, next) {
 });
 
 router.get('/leaderboard', function (req, res, next) {
-  res.render('leaderboard', { user : req.user });
+  User.find({}).
+  where('meta.submissions').gt(0).
+  exec(function (err, users) {
+    var entropyData = _.map(users, function(team){
+      return {
+        'team' : team.username,
+        'entropy' : team.meta.entropy
+      };
+    });
+    var rankEntropy = _.sortBy(entropyData, 'entropy');
+
+    var diversityData = _.map(users, function(team){
+      return {
+        'team' : team.username,
+        'diversity' : team.meta.diversity
+      };
+    });
+    var rankDiversity = _.sortBy(diversityData, 'diversity');
+
+    var localErrorData = _.map(users, function(team){
+      return {
+        'team' : team.username,
+        'localError' : team.meta.localError
+      };
+    });
+    var rankLocalError = _.sortBy(localErrorData, 'localError');
+
+    var globalErrorData = _.map(users, function(team){
+      return {
+        'team' : team.username,
+        'globalError' : team.meta.globalError
+      };
+    });
+    var rankGlobalError = _.sortBy(globalErrorData, 'globalError');
+
+    /*
+    console.log(rankEntropy);
+    console.log(rankDiversity);
+    console.log(rankLocalError);
+    console.log(rankGlobalError);
+    */
+
+    res.render('leaderboard', {
+      user : req.user,
+      entropy: rankEntropy,
+      diversity: rankDiversity,
+      localerror: rankLocalError,
+      globalerror: rankGlobalError
+    });
+  });
+
 });
 
 router.get('/profile', function (req, res, next) {
@@ -246,7 +298,7 @@ router.get('/api/rank/localerror', function (req, res, next) {
   User.find({}).
   where('meta.submissions').gt(0).
   sort('meta.localError').limit(5).
-  select('username meta.localError  ').
+  select('username meta.localError').
   exec(function (err, users) {
     res.json(users);
   });
@@ -261,6 +313,5 @@ router.get('/api/rank/globalerror', function (req, res, next) {
     res.json(users);
   });
 });
-
 
 module.exports = router;

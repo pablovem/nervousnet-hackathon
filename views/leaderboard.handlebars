@@ -10,26 +10,12 @@
             <div class="panel-heading">Entropy</div>
             <div class="panel-body">
               <ol>
-                <li>
-                  <mark>TeamName1</mark>
-                  <small>1</small>
-                </li>
-                <li>
-                  <mark>TeamName2</mark>
-                  <small>2</small>
-                </li>
-                <li>
-                  <mark>TeamName3</mark>
-                  <small>3</small>
-                </li>
-                <li>
-                  <mark>TeamName4</mark>
-                  <small>4</small>
-                </li>
-                <li>
-                  <mark>TeamName5</mark>
-                  <small>5</small>
-                </li>
+                {{#each entropy}}
+                 <li>
+                   <mark>{{this.team}}</mark>
+                   <small>{{this.entropy}}</small>
+                 </li>
+               {{/each}}
               </ol>
             </div>
           </div>
@@ -42,26 +28,12 @@
             <div class="panel-heading">Diversity</div>
             <div class="panel-body">
               <ol>
-                <li>
-                  <mark>TeamName1</mark>
-                  <small>1</small>
-                </li>
-                <li>
-                  <mark>TeamName2</mark>
-                  <small>2</small>
-                </li>
-                <li>
-                  <mark>TeamName3</mark>
-                  <small>3</small>
-                </li>
-                <li>
-                  <mark>TeamName4</mark>
-                  <small>4</small>
-                </li>
-                <li>
-                  <mark>TeamName5</mark>
-                  <small>5</small>
-                </li>
+                {{#each diversity}}
+                 <li>
+                   <mark>{{this.team}}</mark>
+                   <small>{{this.diversity}}</small>
+                 </li>
+               {{/each}}
               </ol>
             </div>
           </div>
@@ -74,26 +46,12 @@
             <div class="panel-heading">Avg Local Error</div>
             <div class="panel-body">
               <ol>
-                <li>
-                  <mark>TeamName1</mark>
-                  <small>1</small>
-                </li>
-                <li>
-                  <mark>TeamName2</mark>
-                  <small>2</small>
-                </li>
-                <li>
-                  <mark>TeamName3</mark>
-                  <small>3</small>
-                </li>
-                <li>
-                  <mark>TeamName4</mark>
-                  <small>4</small>
-                </li>
-                <li>
-                  <mark>TeamName5</mark>
-                  <small>5</small>
-                </li>
+                {{#each localerror}}
+                 <li>
+                   <mark>{{this.team}}</mark>
+                   <small>{{this.localError}}</small>
+                 </li>
+               {{/each}}
               </ol>
             </div>
           </div>
@@ -106,26 +64,12 @@
             <div class="panel-heading">Global Error</div>
             <div class="panel-body">
               <ol>
-                <li>
-                  <mark>TeamName1</mark>
-                  <small>1</small>
-                </li>
-                <li>
-                  <mark>TeamName2</mark>
-                  <small>2</small>
-                </li>
-                <li>
-                  <mark>TeamName3</mark>
-                  <small>3</small>
-                </li>
-                <li>
-                  <mark>TeamName4</mark>
-                  <small>4</small>
-                </li>
-                <li>
-                  <mark>TeamName5</mark>
-                  <small>5</small>
-                </li>
+                {{#each globalerror}}
+                 <li>
+                   <mark>{{this.team}}</mark>
+                   <small>{{this.globalError}}</small>
+                 </li>
+               {{/each}}
               </ol>
             </div>
           </div>
