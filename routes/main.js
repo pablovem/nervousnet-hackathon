@@ -1,7 +1,6 @@
 /* Dependencies */
 var fs = require('fs');
 var path = require('path');
-var rmdir = require('rimraf');
 var multer  = require('multer');
 var DecompressZip = require('decompress-zip');
 
@@ -129,32 +128,32 @@ router.get('/leaderboard', function (req, res, next) {
   exec(function (err, users) {
     var entropyData = _.map(users, function(team){
       return {
-        'team' : team.username,
-        'entropy' : team.meta.entropy
+        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
+        'entropy' : team.meta.entropy.toFixed(2)
       };
     });
     var rankEntropy = _.sortBy(entropyData, 'entropy');
 
     var diversityData = _.map(users, function(team){
       return {
-        'team' : team.username,
-        'diversity' : team.meta.diversity
+        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
+        'diversity' : team.meta.diversity.toFixed(2)
       };
     });
     var rankDiversity = _.sortBy(diversityData, 'diversity');
 
     var localErrorData = _.map(users, function(team){
       return {
-        'team' : team.username,
-        'localError' : team.meta.localError
+        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
+        'localError' : team.meta.localError.toFixed(2)
       };
     });
     var rankLocalError = _.sortBy(localErrorData, 'localError');
 
     var globalErrorData = _.map(users, function(team){
       return {
-        'team' : team.username,
-        'globalError' : team.meta.globalError
+        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
+        'globalError' : team.meta.globalError.toFixed(2)
       };
     });
     var rankGlobalError = _.sortBy(globalErrorData, 'globalError');
@@ -167,11 +166,11 @@ router.get('/leaderboard', function (req, res, next) {
     */
 
     res.render('leaderboard', {
-      user : req.user,
-      entropy: rankEntropy,
-      diversity: rankDiversity,
-      localerror: rankLocalError,
-      globalerror: rankGlobalError
+      user        : req.user,
+      entropy     : rankEntropy.slice(0,5),
+      diversity   : rankDiversity.slice(0,5),
+      localerror  : rankLocalError.slice(0,5),
+      globalerror : rankGlobalError.slice(0,5)
     });
   });
 
