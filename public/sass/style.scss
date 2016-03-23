@@ -1,11 +1,32 @@
 // Variables
 $nn-orange: #f15f18;
-$nn-white: #fff;
+$nn-gray-l: #ddd;
+$nn-gray-m: #bbb;
 $nn-font-family: Montserrat, sans-serif;
 
 // Navbar
 .navbar {
-  //background-color: $nn-orange;
+  background-color: $nn-orange;
+
+  .navbar-header {
+    .navbar-brand{
+      color: $nn-gray-l;
+      &:hover {
+        color: $nn-gray-m;
+      }
+    }
+  }
+
+  .navbar-nav {
+    li{
+      a{
+        color: $nn-gray-l;
+        &:hover {
+          color: $nn-gray-m;
+        }
+      }
+    }
+  }
 }
 
 // Leaderboard
