@@ -1,7 +1,7 @@
 {
   "name": "nervousnet-hackathon",
   "version": "0.0.1",
-  "description": "NervousNet Hackathon 2016",
+  "description": "Privacy/Accuracy Challenge - NervousNet Hackathon 2016",
   "main": "server.js",
   "repository": {
     "type": "git",

@@ -25,6 +25,9 @@ var port = process.env.PORT || 3300;
 // Set Morgan logger
 app.use(morgan('dev'));
 
+// Bower Components
+app.use('/bower_components',  express.static('./bower_components'));
+
 // Set layout engine
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
