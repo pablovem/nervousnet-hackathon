@@ -2,6 +2,7 @@
 $nn-orange: #f15f18;
 $nn-gray-l: #ddd;
 $nn-gray-m: #bbb;
+$nn-gray-d: #333;
 $nn-font-family: Montserrat, sans-serif;
 
 body {
@@ -35,7 +36,15 @@ body {
           color: $nn-gray-m;
         }
       }
+
     }
+
+    .dropdown {
+      a {
+        color: $nn-gray-d;
+      }
+    }
+
   }
 }
 
@@ -260,5 +269,11 @@ body {
   bottom: 0;
   width: 100%;
   height: 60px;
-  //background-color: $nn-orange;
+  background-color: $nn-gray-l;
+
+  p {
+    margin: 20px auto;
+    text-align: center;
+  }
+
 }
