@@ -4,6 +4,16 @@ $nn-gray-l: #ddd;
 $nn-gray-m: #bbb;
 $nn-font-family: Montserrat, sans-serif;
 
+body {
+  background-color: #eee;
+}
+
+.btn-nn {
+  background: linear-gradient(to bottom, #3a404d, #181c26);
+  color: #ddd;
+  text-align: center;
+}
+
 // Navbar
 .navbar {
   background-color: $nn-orange;
