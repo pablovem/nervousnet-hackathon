@@ -8,13 +8,13 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/nnchallenge';
+var mongoUri = 'mongodb://localhost/nnchallenge';
 
 // Connection to db
 mongoose.connect(mongoUri, function (error) {
-    if (error) {
-        console.log(error);
-    }
+  if (error) {
+    console.log(error);
+  }
 });
 
 var app = express();
@@ -61,7 +61,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Set Router
-app.use('/', require('./routes/main') )
+app.use('/', require('./routes/main') );
+app.use('/api/', require('./routes/api') );
 
 // Listen
 var server = app.listen(port, function () {
