@@ -123,57 +123,7 @@ router.get('/submission', function (req, res, next) {
 });
 
 router.get('/leaderboard', function (req, res, next) {
-  User.find({}).
-  where('meta.submissions').gt(0).
-  exec(function (err, users) {
-    var entropyData = _.map(users, function(team){
-      return {
-        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
-        'entropy' : team.meta.entropy.toFixed(2)
-      };
-    });
-    var rankEntropy = _.sortBy(entropyData, 'entropy');
-
-    var diversityData = _.map(users, function(team){
-      return {
-        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
-        'diversity' : team.meta.diversity.toFixed(2)
-      };
-    });
-    var rankDiversity = _.sortBy(diversityData, 'diversity');
-
-    var localErrorData = _.map(users, function(team){
-      return {
-        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
-        'localError' : team.meta.localError.toFixed(2)
-      };
-    });
-    var rankLocalError = _.sortBy(localErrorData, 'localError');
-
-    var globalErrorData = _.map(users, function(team){
-      return {
-        'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
-        'globalError' : team.meta.globalError.toFixed(2)
-      };
-    });
-    var rankGlobalError = _.sortBy(globalErrorData, 'globalError');
-
-    /*
-    console.log(rankEntropy);
-    console.log(rankDiversity);
-    console.log(rankLocalError);
-    console.log(rankGlobalError);
-    */
-
-    res.render('leaderboard', {
-      user        : req.user,
-      entropy     : rankEntropy.slice(0,5),
-      diversity   : rankDiversity.slice(0,5),
-      localerror  : rankLocalError.slice(0,5),
-      globalerror : rankGlobalError.slice(0,5)
-    });
-  });
-
+  res.render('leaderboard', { user : req.user });
 });
 
 router.get('/profile', function (req, res, next) {
@@ -349,20 +299,13 @@ router.get('/api/rank/', function (req, res, next) {
     });
     var rankGlobalError = _.sortBy(globalErrorData, 'globalError');
 
-    /*
-    console.log(rankEntropy);
-    console.log(rankDiversity);
-    console.log(rankLocalError);
-    console.log(rankGlobalError);
-    */
     res.json({
-      user        : req.user,
       entropy     : rankEntropy.slice(0,5),
       diversity   : rankDiversity.slice(0,5),
       localerror  : rankLocalError.slice(0,5),
       globalerror : rankGlobalError.slice(0,5)
     });
-    
+
   });
 });
 

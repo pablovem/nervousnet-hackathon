@@ -10,14 +10,7 @@
           <div class="panel panel-leaderboard">
             <div class="panel-heading">Entropy</div>
             <div class="panel-body">
-              <ol>
-                {{#each entropy}}
-                 <li>
-                   <mark>{{this.team}}</mark>
-                   <small>{{this.entropy}}</small>
-                 </li>
-               {{/each}}
-              </ol>
+              <ol class="entropy"></ol>
             </div>
           </div>
         </div>
@@ -28,14 +21,7 @@
           <div class="panel panel-leaderboard">
             <div class="panel-heading">Diversity</div>
             <div class="panel-body">
-              <ol>
-                {{#each diversity}}
-                 <li>
-                   <mark>{{this.team}}</mark>
-                   <small>{{this.diversity}}</small>
-                 </li>
-               {{/each}}
-              </ol>
+              <ol class="diversity"></ol>
             </div>
           </div>
         </div>
@@ -46,14 +32,7 @@
           <div class="panel panel-leaderboard">
             <div class="panel-heading">Avg Local Error</div>
             <div class="panel-body">
-              <ol>
-                {{#each localerror}}
-                 <li>
-                   <mark>{{this.team}}</mark>
-                   <small>{{this.localError}}</small>
-                 </li>
-               {{/each}}
-              </ol>
+              <ol class="localerror"></ol>
             </div>
           </div>
         </div>
@@ -64,14 +43,7 @@
           <div class="panel panel-leaderboard">
             <div class="panel-heading">Global Error</div>
             <div class="panel-body">
-              <ol>
-                {{#each globalerror}}
-                 <li>
-                   <mark>{{this.team}}</mark>
-                   <small>{{this.globalError}}</small>
-                 </li>
-               {{/each}}
-              </ol>
+              <ol class="globalerror"></ol>
             </div>
           </div>
         </div>
@@ -82,5 +54,33 @@
   </div>
 </div>
 
+<script>
+setInterval(function poll(){
+  $.ajax({
+    url: "/api/rank/",
+    success: function(data){
+      //console.log(data);
+      $(".entropy").empty();
+      for (var i = 0; i<data.entropy.length; i++) {
+        $(".entropy").append("<li><mark>" + data.entropy[i].team + "</mark><small>" + data.entropy[i].entropy + "</small></li>");
+      }
+      $(".diversity").empty();
+      for (var i = 0; i<data.diversity.length; i++) {
+        $(".diversity").append("<li><mark>" + data.diversity[i].team + "</mark><small>" + data.diversity[i].diversity + "</small></li>");
+      }
+      $(".localerror").empty();
+      for (var i = 0; i<data.localerror.length; i++) {
+        $(".localerror").append("<li><mark>" + data.localerror[i].team + "</mark><small>" + data.localerror[i].localError + "</small></li>");
+      }
+      $(".globalerror").empty();
+      for (var i = 0; i<data.globalerror.length; i++) {
+        $(".globalerror").append("<li><mark>" + data.globalerror[i].team + "</mark><small>" + data.globalerror[i].globalError + "</small></li>");
+      }
+
+    },
+    dataType: "json"
+  });
+}, 3000);
+</script>
 
 {{> footer }}
