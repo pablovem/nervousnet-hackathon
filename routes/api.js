@@ -40,14 +40,33 @@ function setupDeps(directory) {
 function runAnalyser(directory, username) {
   //child.spawn('java', ['-jar', directory + 'analyser.jar']);
   console.log('Running Analyser');
-  exec('java -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
+  exec('java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
     if (err) {
       console.log(err);
       // Error management
       throw err;
     }
+
+    var logstdout =  directory + "stdout.log";
     console.log(directory + ' Analyser stdout: ' + stdout);
+    fs.writeFile(logstdout, stdout, function(error) {
+     if (error) {
+       console.error("stdout error: " + error.message);
+     } else {
+       console.log("stdout log saved to:" + path);
+     }
+    });
+
+    var logstderr =  directory + "stderr.log";
     console.log(directory + ' Analyser stderr: ' + stderr);
+    fs.writeFile(logstderr, stderr, function(error) {
+     if (error) {
+       console.error("stderr error: " + error.message);
+     } else {
+       console.log("stderr log saved to:" + path);
+     }
+    });
+
     console.log("Analyser finished");
 
     // Update last submission in model
@@ -108,7 +127,6 @@ router.post('/register', function(req, res) {
   });
   //console.log(user);
 
-  // Create team folder
   var teampath = './data/' + user.username + '/';
 
   User.register(user, req.body.password, function(err, user) {
@@ -116,7 +134,7 @@ router.post('/register', function(req, res) {
       return res.render('register', { user: user});
     }
     console.log(user);
-
+    // Create team folder
     checkDirectorySync(teampath);
 
     passport.authenticate('local')(req,res, function () {
@@ -163,7 +181,11 @@ router.post('/submission', function(req,res) {
     user.submissions.push({
       id : submission.toString(),
       path: './data/' + req.user.username + '/' + submission + '/',
-      state: "Checking"
+      state: "Checking",
+      entropy: "NA",
+      diversity: "NA",
+      localError: "NA",
+      globalError: "NA"
     });
     //console.log(user);
     user.save(function (err) {
