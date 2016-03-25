@@ -173,6 +173,17 @@ router.get('/api/users', function (req, res, next) {
   });
 });
 
+router.get('/api/submissions/:username', function (req, res, next) {
+  User.findOne({username : req.params.username}, function (err, user) {
+    if (err) {
+      res.send(err);
+    }
+    //console.log(users);
+    res.json(user.submissions);
+    //res.render('/usersList', {users: users});
+  });
+});
+
 router.post('/api/submission', function(req,res) {
 
   // Update model with submission
