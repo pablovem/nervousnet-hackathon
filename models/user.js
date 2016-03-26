@@ -22,6 +22,7 @@ var UserSchema = new Schema({
     }],
     meta: {
       submissions:  {type: Number,  default: 0},
+      lastState:    {type: String,  default: ""},
       entropy:      {type: Number},
       diversity:    {type: Number},
       localError:   {type: Number},

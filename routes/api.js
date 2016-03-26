@@ -39,7 +39,7 @@ function setupDeps(directory) {
 
 function runAnalyser(directory, username) {
   //child.spawn('java', ['-jar', directory + 'analyser.jar']);
-  console.log('Running Analyser');
+  console.log('Running Analyser: java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"');
   exec('java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
     if (err) {
       console.log(err);
@@ -86,6 +86,7 @@ function runAnalyser(directory, username) {
       user.meta.diversity = rank.diversity;
       user.meta.localError = rank.localError;
       user.meta.globalError = rank.globalError;
+      user.meta.lastState = "Analysed";
 
       user.save(function (err) {
         if(err) {
@@ -178,6 +179,7 @@ router.post('/submission', function(req,res) {
   User.findOne({ username : req.user.username}, function (err, user) {
     var submission = user.meta.submissions + 1;
     user.meta.submissions = submission;
+    user.meta.lastState = "Checking";
     user.submissions.push({
       id : submission.toString(),
       path: './data/' + req.user.username + '/' + submission + '/',
@@ -227,7 +229,7 @@ router.post('/submission', function(req,res) {
 });
 
 router.get('/rank/entropy', function (req, res, next) {
-  User.find({}).
+  User.find({'meta.lastState': 'Analysed'}).
   where('meta.submissions').gt(0).
   sort('meta.entropy').limit(5).
   select('username meta.entropy').
@@ -237,7 +239,7 @@ router.get('/rank/entropy', function (req, res, next) {
 });
 
 router.get('/rank/diversity', function (req, res, next) {
-  User.find({}).
+  User.find({'meta.lastState': 'Analysed'}).
   where('meta.submissions').gt(0).
   sort('meta.diversity').limit(5).
   select('username meta.diversity').
@@ -247,7 +249,7 @@ router.get('/rank/diversity', function (req, res, next) {
 });
 
 router.get('/rank/localerror', function (req, res, next) {
-  User.find({}).
+  User.find({'meta.lastState': 'Analysed'}).
   where('meta.submissions').gt(0).
   sort('meta.localError').limit(5).
   select('username meta.localError').
@@ -257,7 +259,7 @@ router.get('/rank/localerror', function (req, res, next) {
 });
 
 router.get('/rank/globalerror', function (req, res, next) {
-  User.find({}).
+  User.find({'meta.lastState': 'Analysed'}).
   where('meta.submissions').gt(0).
   sort('meta.globalError').limit(5).
   select('username meta.globalError').
@@ -267,9 +269,14 @@ router.get('/rank/globalerror', function (req, res, next) {
 });
 
 router.get('/rank/', function (req, res, next) {
-  User.find({}).
+  User.find({'meta.lastState': 'Analysed'}).
+  where('role').equals('Team').
   where('meta.submissions').gt(0).
   exec(function (err, users) {
+    if (err) {
+      console.log(err);
+    }
+    //console.log(users);
     var entropyData = _.map(users, function(team){
       return {
         'team' : team.username.charAt(0).toUpperCase() + team.username.slice(1),
