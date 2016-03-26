@@ -18,10 +18,10 @@
 </div>
 
 <script>
-$(document).ready(function () {
-  $('.btn-nn').on('click', function () {
-      $(this).addClass('disabled');
-  });
+$( "#submForm" ).submit(function( event ) {
+  $(".btn-nn").attr("disabled", "disabled");
+  $(".btn-nn").text("Uploading...Please Wait")
+  //event.preventDefault();
 });
 </script>
 
