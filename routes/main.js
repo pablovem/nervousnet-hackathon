@@ -7,15 +7,27 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/admin/register', function (req, res, next) {
-  res.render('register', {});
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    res.render('register', { user: req.user });
+  }
 });
 
 router.get('/resources', function (req, res, next) {
-  res.render('resources', { user: req.user });
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    res.render('resources', { user: req.user });
+  }
 });
 
 router.get('/submission', function (req, res, next) {
-  res.render('submission', { user: req.user });
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    res.render('submission', { user: req.user });
+  }
 });
 
 router.get('/leaderboard', function (req, res, next) {
@@ -23,7 +35,11 @@ router.get('/leaderboard', function (req, res, next) {
 });
 
 router.get('/profile', function (req, res, next) {
-  res.render('profile', { user : req.user });
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    res.render('profile', { user : req.user });
+  }
 });
 
 module.exports = router;
