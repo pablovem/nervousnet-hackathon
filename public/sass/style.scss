@@ -48,6 +48,25 @@ body {
   }
 }
 
+// Login
+#particles-js{
+  width: 100%;
+  height: 60%;
+  background-color: $nn-gray-l;
+  background-image: url('');
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+.login-container {
+  index: 50;
+  top: 30%;
+  left:42%;
+  position: absolute;
+  text-align: center;
+}
+
 // Leaderboard
 .leaderboard {
   font-family: 'Open Sans', sans-serif;

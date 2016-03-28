@@ -197,7 +197,6 @@ router.get('/users', function (req, res, next) {
   User.find({}, function (err, users) {
     //console.log(users);
     res.json(users);
-    //res.render('/usersList', {users: users});
   });
 });
 
@@ -206,9 +205,7 @@ router.get('/submissions/:username', function (req, res, next) {
     if (err) {
       res.send(err);
     }
-    //console.log(users);
     res.json(user.submissions);
-    //res.render('/usersList', {users: users});
   });
 });
 
