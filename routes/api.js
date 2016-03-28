@@ -43,8 +43,25 @@ function runAnalyser(directory, username) {
   exec('java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
     if (err) {
       console.log("Error during Analyser: " + err);
-      // Error management
-      throw err;
+
+      // Update last submission in model with failure
+      User.findOne({ username : username}, function (err, user) {
+        console.log("Update failed submission in model");
+
+        var last_submission = user.meta.submissions - 1;
+        user.submissions[last_submission].state = "Failed";
+        user.meta.lastState = "Failed";
+
+        user.save(function (err) {
+          if(err) {
+            console.error('error trying to update failed submission after Analyser');
+          }
+          console.log("Failed submission updated in model");
+        });
+
+      });
+      console.log("Analyser failed");
+
     }
 
     var logstdout =  directory + "stdout.log";
