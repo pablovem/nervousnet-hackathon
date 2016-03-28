@@ -42,7 +42,7 @@ function runAnalyser(directory, username) {
   console.log('Running Analyser: java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"');
   exec('java -Xmx2g -Xms1g -jar ' + directory + 'analyser.jar ' + '\"' + directory + '\"' , function (err, stdout, stderr) {
     if (err) {
-      console.log(err);
+      console.log("Error during Analyser: " + err);
       // Error management
       throw err;
     }
@@ -67,36 +67,58 @@ function runAnalyser(directory, username) {
      }
     });
 
-    console.log("Analyser finished");
+    if(stderr === "") {
+      // Update last submission in model
+      User.findOne({ username : username}, function (err, user) {
+        console.log("Update submission in model");
 
-    // Update last submission in model
-    User.findOne({ username : username}, function (err, user) {
-      console.log("Update submission in model");
+        var last_submission = user.meta.submissions - 1;
+        user.submissions[last_submission].state = "Analysed";
+        var rank = require('../' + user.submissions[last_submission].path + 'rankings/rankings.json');
+        user.submissions[last_submission].state = "Analysed";
+        user.submissions[last_submission].entropy = rank.entropy;
+        user.submissions[last_submission].diversity = rank.diversity;
+        user.submissions[last_submission].localError = rank.localError;
+        user.submissions[last_submission].globalError = rank.globalError;
 
-      var last_submission = user.meta.submissions - 1;
-      user.submissions[last_submission].state = "Analysed";
-      var rank = require('../' + user.submissions[last_submission].path + 'rankings/rankings.json');
-      user.submissions[last_submission].state = "Analysed";
-      user.submissions[last_submission].entropy = rank.entropy;
-      user.submissions[last_submission].diversity = rank.diversity;
-      user.submissions[last_submission].localError = rank.localError;
-      user.submissions[last_submission].globalError = rank.globalError;
+        user.meta.entropy = rank.entropy;
+        user.meta.diversity = rank.diversity;
+        user.meta.localError = rank.localError;
+        user.meta.globalError = rank.globalError;
+        user.meta.lastState = "Analysed";
 
-      user.meta.entropy = rank.entropy;
-      user.meta.diversity = rank.diversity;
-      user.meta.localError = rank.localError;
-      user.meta.globalError = rank.globalError;
-      user.meta.lastState = "Analysed";
+        user.save(function (err) {
+          if(err) {
+            console.error('error trying to update submission after Analyser');
+          }
+          console.log("Submission updated in model");
+        });
 
-      user.save(function (err) {
-        if(err) {
-          console.error('error trying to update submission after Analyser');
-        }
-        console.log("Submission updated in model");
       });
 
-    });
+      console.log("Analyser finished");
 
+    }
+    else {
+      // Update last submission in model with failure
+      User.findOne({ username : username}, function (err, user) {
+        console.log("Update failed submission in model");
+
+        var last_submission = user.meta.submissions - 1;
+        user.submissions[last_submission].state = "Failed";
+        user.meta.lastState = "Failed";
+
+        user.save(function (err) {
+          if(err) {
+            console.error('error trying to update failed submission after Analyser');
+          }
+          console.log("Failed submission updated in model");
+        });
+
+      });
+
+      console.log("Analyser failed");
+    }
   });
 }
 
@@ -175,6 +197,13 @@ router.get('/submissions/:username', function (req, res, next) {
 
 router.post('/submission', function(req,res) {
 
+  var submindex = req.user.meta.submissions+1;
+  var teampath = './data/' + req.user.username + '/' + submindex + '/';
+  // check submission folder
+  checkDirectorySync(teampath);
+  // unzip dependencies
+  setupDeps(teampath);
+
   // Update model with submission
   User.findOne({ username : req.user.username}, function (err, user) {
     var submission = user.meta.submissions + 1;
@@ -197,13 +226,6 @@ router.post('/submission', function(req,res) {
     });
   });
 
-  var submindex = req.user.meta.submissions+1;
-  var teampath = './data/' + req.user.username + '/' + submindex + '/';
-  // check submission folder
-  checkDirectorySync(teampath);
-  // unzip dependencies
-  setupDeps(teampath);
-
   // upload submission
   upload(req, res, function (err) {
     if(err) {
@@ -220,8 +242,12 @@ router.post('/submission', function(req,res) {
     unzipper.on('progress', function (fileIndex, fileCount) {
       //console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
     });
+    unzipper.on('list', function (files) {
+      console.log('The submission contains:');
+      console.log(files);
+    });
+    //unzipper.list();
     unzipper.extract({ path: teampath});
-
     //res.end("Submission has been uploaded");
     res.redirect('/profile');
   });
