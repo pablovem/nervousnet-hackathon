@@ -160,6 +160,7 @@ var upload = multer({
                       }
                     }).single('submission');
 
+/* Routes */
 router.post('/register', function(req, res) {
   var user = new User({
     username: req.body.username,
