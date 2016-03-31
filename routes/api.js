@@ -3,6 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var multer  = require('multer');
 var DecompressZip = require('decompress-zip');
+var csv = require("fast-csv");
 
 const child = require('child_process');
 var exec = require('child_process').exec;
@@ -201,13 +202,41 @@ router.get('/users', function (req, res, next) {
   });
 });
 
-router.get('/submissions/:username', function (req, res, next) {
-  User.findOne({username : req.params.username}, function (err, user) {
+router.get('/submissions', function (req, res, next) {
+  User.findOne({username : req.user.username}, function (err, user) {
     if (err) {
       res.send(err);
     }
     res.json(user.submissions);
   });
+});
+
+router.get('/submissions/:submission', function (req, res, next) {
+  ///submissions/team1/5
+  var submindex = req.params.submission;
+  var team = req.user.username;
+  var submissionpath = './data/' + team + '/' + submindex + '/';
+  var submissionDatacsv = submissionpath + 'smallInfo/smallInfo.csv';
+  var subdata= {
+    "entropy" : [],
+    "diversity" : [],
+    "average_local_error" : [],
+    "global_error" : []
+  };
+
+  // Format data for timeseries
+  csv
+   .fromPath(submissionDatacsv, {headers: true})
+   .on("data", function(data){
+     console.log(data);
+     var epochNumber = parseInt(data['epoch']);
+     //console.log("epoch: " + data['time']);
+     subdata["entropy"].push(parseFloat(data['entropy']));
+   })
+   .on("end", function(){
+     res.json(subdata);
+   });
+
 });
 
 router.post('/submission', function(req,res) {

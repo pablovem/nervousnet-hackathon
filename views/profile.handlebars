@@ -24,14 +24,22 @@
 </div>
 
 <script>
-var username = $('h1').text();
 function poll(){
   $.ajax({
-    url: "/api/submissions/" + username,
+    url: "/api/submissions",
     success: function(data){
-      console.log(data);
+      //console.log(data);
       $(".submissions").empty();
-      $(".submissions").append("<tr><th>Submission</th><th>Submitted</th><th>State</th><th>Entropy</th><th>Diversity</th><th>Avg Local Error</th><th>Global Error</th></tr>");
+      $(".submissions").append(
+        "<tr>" +
+        "<th>Submission</th>" +
+        "<th>Submitted</th>" +
+        "<th>State</th>" +
+        "<th>Entropy</th>" +
+        "<th>Diversity</th>" +
+        "<th>Avg Local Error</th>" +
+        "<th>Global Error</th>" +
+        "</tr>");
       for (var i = 0; i<data.length; i++) {
         $(".submissions").append(
           "<tr>" +
