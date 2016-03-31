@@ -203,12 +203,16 @@ router.get('/users', function (req, res, next) {
 });
 
 router.get('/submissions', function (req, res, next) {
-  User.findOne({username : req.user.username}, function (err, user) {
-    if (err) {
-      res.send(err);
-    }
-    res.json(user.submissions);
-  });
+  if(!req.user) {
+    res.status(404).send("Data NA");
+  } else {
+    User.findOne({username : req.user.username}, function (err, user) {
+      if (err) {
+        res.send(err);
+      }
+      res.json(user.submissions);
+    });
+  }
 });
 
 router.get('/submissions/:submission', function (req, res, next) {
