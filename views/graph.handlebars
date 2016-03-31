@@ -1,0 +1,38 @@
+{{> navbar }}
+
+<div class="container">
+
+  <h1>Submission <span class="submission">{{submission}}</span> <small>Details</small></h1>
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="details"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{{> footer }}
+
+<script>
+var submission = d3.select(".submission").text();
+console.log(submission);
+
+var apiurl = "/api/submissions/" + submission;
+
+var timeSeries = c3.generate({
+  bindto  : '#details',
+  data    : {
+    url: apiurl,
+    mimeType: 'json',
+  },
+  zoom: {
+    enabled: true
+  }
+});
+
+</script>

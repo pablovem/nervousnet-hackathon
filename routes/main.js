@@ -30,6 +30,14 @@ router.get('/submission', function (req, res, next) {
   }
 });
 
+router.get('/details/:submission', function (req, res, next) {
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    res.render('graph', { user: req.user, submission : req.params.submission});
+  }
+});
+
 router.get('/leaderboard', function (req, res, next) {
   res.render('leaderboard', { user : req.user });
 });
