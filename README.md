@@ -75,11 +75,8 @@ bower install
 Almost done:
 
 ```
-mkdir data
-gulp css
+gulp init
 ```
-
-> Remember to copy deps.zip in data/
 
 ### Running
 
