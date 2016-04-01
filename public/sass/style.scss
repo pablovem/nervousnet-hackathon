@@ -72,6 +72,57 @@ body {
   }
 }
 
+// Submission Details Graph
+#details {
+  .c3-line {
+    stroke-width: 2px;
+    stroke-dasharray: 2;
+  }
+
+  .c3-line-entropy {
+
+  }
+  .c3-line-diversity {
+
+  }
+  .c3-line-avgLocalError {
+
+  }
+  .c3-line-globalError {
+
+  }
+
+  .c3-tooltip {
+    opacity: 0.8;
+
+    tr {
+      border: 1px solid $nn-gray-m;
+
+      th {
+        background-color: $nn-orange;
+        text-align: center;
+      }
+
+      td {
+        background-color: #fff;
+      }
+
+      td.value {
+        font-style: italic;
+      }
+
+      td > span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 6px;
+        border-radius: 5px;
+      }
+    }
+
+  }
+}
+
 // Leaderboard
 .leaderboard {
   font-family: 'Open Sans', sans-serif;
