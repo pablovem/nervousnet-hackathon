@@ -67,9 +67,14 @@ body {
   position: absolute;
   text-align: center;
 
-  input {
-    text-align: center;
+  form {
+    max-width: 300px;
+
+    input {
+      text-align: center;
+    }
   }
+
 }
 
 // Submissions
