@@ -72,6 +72,16 @@ body {
   }
 }
 
+// Submissions
+.submissions {
+  th {
+    text-align: center;
+  }
+  td {
+    text-align: center;
+  }
+}
+
 // Submission Details Graph
 #details {
   .c3-line {
@@ -336,7 +346,6 @@ body {
     }
   }
 }
-
 
 // Footer
 .footer {

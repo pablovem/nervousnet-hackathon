@@ -14,7 +14,6 @@
           <div class="panel-body">
             <p>Your team has submitted {{user.meta.submissions}} times.</p>
           </div>
-          <!-- Table -->
           <table class="table submissions"></table>
         </div>
       </div>
@@ -30,6 +29,7 @@ function poll(){
     success: function(data){
       //console.log(data);
       $(".submissions").empty();
+
       $(".submissions").append(
         "<tr>" +
         "<th>Submission</th>" +
@@ -39,8 +39,16 @@ function poll(){
         "<th>Diversity</th>" +
         "<th>Avg Local Error</th>" +
         "<th>Global Error</th>" +
+        "<th>Details</th>" +
         "</tr>");
+
       for (var i = 0; i<data.length; i++) {
+
+        var subDetails = "";
+        if(data[i].state === "Analysed") {
+          subDetails = '<a href="/details/' + data[i].id + '">View</a>';
+        }
+
         $(".submissions").append(
           "<tr>" +
           "<td>" + data[i].id + "</td>" +
@@ -50,6 +58,7 @@ function poll(){
           "<td>" + data[i].diversity + "</td>" +
           "<td>" + data[i].localError + "</td>" +
           "<td>" + data[i].globalError + "</td>" +
+          "<td>" + subDetails + "</td>" +
           "</tr>"
         );
       }
@@ -60,7 +69,7 @@ function poll(){
 // Initial call
 poll();
 // Polling
-setInterval(poll, 1000);
+setInterval(poll, 2500);
 </script>
 
 {{> footer }}
