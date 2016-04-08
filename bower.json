@@ -21,6 +21,7 @@
     "bootstrap": "~3.3.6",
     "bootstrap-fileinput": "~4.3.1",
     "particles.js": "~2.0.0",
-    "c3": "~0.4.10"
+    "c3": "~0.4.10",
+    "jquery-timeago": "~1.5.2"
   }
 }

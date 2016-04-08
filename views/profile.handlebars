@@ -52,7 +52,7 @@ function poll(){
         $(".submissions").append(
           "<tr>" +
           "<td>" + data[i].id + "</td>" +
-          "<td>" + data[i].submitted_at + "</td>" +
+          "<td>" + "<time class='timeago' datetime='" + data[i].submitted_at + "'>" + data[i].submitted_at + "</time>" + "</td>" +
           "<td>" + data[i].state + "</td>" +
           "<td>" + data[i].entropy + "</td>" +
           "<td>" + data[i].diversity + "</td>" +
@@ -62,6 +62,8 @@ function poll(){
           "</tr>"
         );
       }
+
+      $("time.timeago").timeago();
     },
     dataType: "json"
   });
