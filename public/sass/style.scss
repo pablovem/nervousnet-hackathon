@@ -5,8 +5,14 @@ $nn-gray-m: #bbb;
 $nn-gray-d: #333;
 $nn-font-family: Montserrat, sans-serif;
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   background-color: $nn-gray-l;
+  margin-bottom: 60px;
 }
 
 .btn-nn {
