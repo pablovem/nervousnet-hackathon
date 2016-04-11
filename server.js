@@ -66,7 +66,7 @@ app.use('/api/', require('./routes/api') );
 
 // 404
 app.use(function(req, res, next) {
-  res.status(404).render('error', { error: "Sorry can't find that!" });
+  res.status(404).render('error', { error: "Sorry, can't find that!" });
 });
 
 // Listen

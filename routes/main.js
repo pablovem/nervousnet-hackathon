@@ -47,12 +47,28 @@ router.get('/profile', function (req, res, next) {
   }
 });
 
-// Admin
+// Admin Area
 router.get('/admin/register', function (req, res, next) {
   if(!req.user) {
     res.redirect('/');
   } else {
-    res.render('register', { user: req.user });
+    if(req.user.isAdmin){
+      res.render('register', { user: req.user });
+    } else {
+      res.redirect('/');
+    }
+  }
+});
+
+router.get('/admin/dashboard', function (req, res, next) {
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    if(req.user.isAdmin){
+      res.render('admin', { user: req.user });
+    } else {
+      res.redirect('/');
+    }
   }
 });
 
@@ -60,7 +76,8 @@ router.get('/admin/setup', function (req,res,next) {
   var admin = new User({
     username: config.admin.username,
     email:    config.admin.email,
-    role:     "Admin"
+    role:     "Admin",
+    isAdmin:  true
   });
   //console.log(admin);
 

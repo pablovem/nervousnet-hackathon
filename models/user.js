@@ -8,6 +8,7 @@ var UserSchema = new Schema({
     password:       {type: String},
     email:          {type: String,  required: true},
     role:           {type: String,  default: "Team"},
+    isAdmin:        {type: Boolean, default: false},
     team:           {type: String,  required: false},
     created_at:     {type: Date,    required: false,  default: Date.now},
     submissions: [{
