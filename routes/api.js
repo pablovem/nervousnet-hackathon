@@ -196,10 +196,18 @@ router.get('/logout', function (req, res, next) {
 });
 
 router.get('/users', function (req, res, next) {
-  User.find({}, function (err, users) {
-    //console.log(users);
-    res.json(users);
-  });
+  if(req.user) {
+    if(req.user.isAdmin){
+      User.find({}, function (err, users) {
+        //console.log(users);
+        res.json(users);
+      });
+    } else {
+      res.send("NA");
+    }
+  } else {
+    res.send("NA");
+  }
 });
 
 router.get('/submissions', function (req, res, next) {
@@ -257,7 +265,6 @@ router.get('/submissions/:submission', function (req, res, next) {
 });
 
 router.post('/submission', function(req,res) {
-
   var submindex = req.user.meta.submissions+1;
   var teampath = './data/' + req.user.username + '/' + submindex + '/';
   // check submission folder

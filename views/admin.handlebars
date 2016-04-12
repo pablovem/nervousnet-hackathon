@@ -4,7 +4,75 @@
   <div class="page-header">
     <h1>Admin Dashboard</h1>
     <p>{{user.username}}</p>
-    <p>{{user.email}}</p>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-info">
+          <div class="panel-heading">Teams</div>
+          <div class="panel-body">
+            {{#each teams}}
+            <div class="panel panel-primary">
+              <div class="panel-heading">{{this.username}}</div>
+              <div class="panel-body">
+                <table class="table table-bordered submissions">
+                  <thead>
+                    <tr class="info">
+                      <th>Submissions</th>
+                      <th>State</th>
+                      <th>Entropy</th>
+                      <th>Diversity</th>
+                      <th>AvgLocalError</th>
+                      <th>GlobalError</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{this.meta.submissions}}</td>
+                      <td>{{this.meta.lastState}}</td>
+                      <td>{{this.meta.entropy}}</td>
+                      <td>{{this.meta.diversity}}</td>
+                      <td>{{this.meta.localError}}</td>
+                      <td>{{this.meta.globalError}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <table class="table table-bordered submissions ">
+                <thead>
+                  <tr class="info">
+                    <th>Id</th>
+                    <th>Path</th>
+                    <th>State</th>
+                    <th>Time</th>
+                    <th>Entropy</th>
+                    <th>Divertsity</th>
+                    <th>AvgLocalError</th>
+                    <th>GlobalError</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each this.submissions}}
+                  <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.path}}</td>
+                    <td>{{this.state}}</td>
+                    <td>{{this.submitted_at}}</td>
+                    <td>{{this.entropy}}</td>
+                    <td>{{this.diversity}}</td>
+                    <td>{{this.localError}}</td>
+                    <td>{{this.globalError}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

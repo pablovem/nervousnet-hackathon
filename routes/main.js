@@ -65,7 +65,11 @@ router.get('/admin/dashboard', function (req, res, next) {
     res.redirect('/');
   } else {
     if(req.user.isAdmin){
-      res.render('admin', { user: req.user });
+      // Create data
+      User.find({ role : 'Team'}, function (err, teams) {
+        //console.log(teams);
+        res.render('admin', { user: req.user, teams: teams });
+      });
     } else {
       res.redirect('/');
     }
