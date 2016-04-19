@@ -26,6 +26,7 @@ var timeSeries = c3.generate({
   data    : {
     url: apiurl,
     mimeType: 'json',
+    hide: ['entropy','diversity']
   },
   zoom: {
     enabled: true
