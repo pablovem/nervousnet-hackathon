@@ -277,6 +277,7 @@ router.post('/submission', function(req,res) {
     var submission = user.meta.submissions + 1;
     user.meta.submissions = submission;
     user.meta.lastState = "Checking";
+    user.meta.lastSubmission = new Date();
     user.submissions.push({
       id : submission.toString(),
       path: './data/' + req.user.username + '/' + submission + '/',

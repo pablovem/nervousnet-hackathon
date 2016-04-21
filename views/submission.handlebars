@@ -3,36 +3,45 @@
 <div class="container">
   <div class="page-header">
     <h1>Submission</h1>
+    {{#unless display.enabled}}
+      <div class="well">
+        <h5>{{display.message}} Your last submission was around {{display.minutes_since}} minutes ago.</h5>
+      </div>
+    {{/unless}}
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <form role="form" id="submForm" action="/api/submission" method="post" enctype="multipart/form-data">
-        <label class="control-label">Select your output .zip file:</label>
-        <input id="input-2" name="submission" type="file" accept=".zip" class="file" multiple data-show-upload="false" data-show-caption="true">
-        <hr>
-        <button type="submit" class="btn btn-primary btn-lg btn-block btn-nn">Submit</button>
-      </form>
+  {{#if display.enabled}}
+    <div class="row">
+      <div class="col-md-12">
+        <form role="form" id="submForm" action="/api/submission" method="post" enctype="multipart/form-data">
+          <label class="control-label">Select your output .zip file:</label>
+          <input id="input-2" name="submission" type="file" accept=".zip" class="file" multiple data-show-upload="false" data-show-caption="true">
+          <hr>
+          <button type="submit" class="btn btn-primary btn-lg btn-block btn-nn">Submit</button>
+        </form>
+      </div>
     </div>
-  </div>
+
+    <script>
+    $(document).ready( function () {
+      $(".btn-nn").attr("disabled", "disabled");
+
+      $('input:file').change( function () {
+        if ( $(this).val() ) {
+          $('.btn-nn').attr('disabled',false);
+        }
+      });
+
+      $( "#submForm" ).submit(function( event ) {
+        $(".btn-nn").attr("disabled", "disabled");
+        $(".btn-nn").text("Uploading...Please Wait")
+        //event.preventDefault();
+      });
+    });
+    </script>
+
+  {{/if}}
+
 </div>
-
-<script>
-$(document).ready( function () {
-  $(".btn-nn").attr("disabled", "disabled");
-
-  $('input:file').change( function () {
-    if ( $(this).val() ) {
-      $('.btn-nn').attr('disabled',false);
-    }
-  });
-
-  $( "#submForm" ).submit(function( event ) {
-    $(".btn-nn").attr("disabled", "disabled");
-    $(".btn-nn").text("Uploading...Please Wait")
-    //event.preventDefault();
-  });
-});
-</script>
 
 {{> footer }}
