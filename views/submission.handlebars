@@ -5,7 +5,7 @@
     <h1>Submission</h1>
     {{#unless display.enabled}}
       <div class="well">
-        <h5>{{display.message}} Your last submission was around {{display.minutes_since}} minutes ago.</h5>
+        <h5>{{display.message}} Your last analysis was around {{display.minutes_since}} minutes ago.</h5>
       </div>
     {{/unless}}
   </div>
@@ -34,7 +34,9 @@
 
       $( "#submForm" ).submit(function( event ) {
         $(".btn-nn").attr("disabled", "disabled");
-        $(".btn-nn").text("Uploading...Please Wait")
+        $(".control-label").css("display", "none");
+        $(".file-input").css("display", "none");
+        $(".btn-nn").text("Uploading...Please Wait");
         //event.preventDefault();
       });
     });

@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var mongoUri = 'mongodb://localhost/nnchallenge';
+var mongoUri = 'mongodb://localhost/nnchallenge2016';
 
 // Connection to db
 mongoose.connect(mongoUri, function (error) {
