@@ -23,25 +23,34 @@ router.get('/submission', function (req, res, next) {
   if(!req.user) {
     res.redirect('/');
   } else {
-    var lastSubmission = req.user.meta.lastSubmission.getTime();
-    var currentRequest = new Date().getTime();
-    var elaptime =  Math.abs(currentRequest - lastSubmission);
-    var minselaptime = elaptime/(1000*60);
-    var display = {};
-    if(minselaptime > 5) {
-      display = {
+    if(req.user.meta.submissions > 0){
+      var lastSubmission = req.user.meta.lastSubmission.getTime();
+      var currentRequest = new Date().getTime();
+      var elaptime =  Math.abs(currentRequest - lastSubmission);
+      var minselaptime = elaptime/(1000*60);
+      var display = {};
+      if(minselaptime > 5) {
+        display = {
+          "message"       : "Now you can upload your submission",
+          "minutes_since" : parseInt(minselaptime),
+          "enabled"       : true
+        };
+      } else {
+        display = {
+          "message"       : "Please try again later.",
+          "minutes_since" : parseInt(minselaptime),
+          "enabled"       : false
+        };
+      }
+      res.render('submission', { user: req.user , display : display});
+    } else {
+      var display = {
         "message"       : "Now you can upload your submission",
         "minutes_since" : parseInt(minselaptime),
         "enabled"       : true
       };
-    } else {
-      display = {
-        "message"       : "Please try again later.",
-        "minutes_since" : parseInt(minselaptime),
-        "enabled"       : false
-      };
+      res.render('submission', { user: req.user , display : display})
     }
-    res.render('submission', { user: req.user , display : display});
   }
 });
 
