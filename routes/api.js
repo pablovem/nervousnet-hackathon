@@ -345,7 +345,7 @@ router.get('/rank/diversity', function (req, res, next) {
 router.get('/rank/localerror', function (req, res, next) {
   User.find({'meta.lastState': 'Analysed'}).
   where('meta.submissions').gt(0).
-  sort('meta.localError').limit(5).
+  sort('-meta.localError').limit(5).
   select('username meta.localError').
   exec(function (err, users) {
     res.json(users);
@@ -394,6 +394,7 @@ router.get('/rank/', function (req, res, next) {
       };
     });
     var rankLocalError = _.sortBy(localErrorData, 'localError');
+    rankLocalError = rankLocalError.reverse();
 
     var globalErrorData = _.map(users, function(team){
       return {
