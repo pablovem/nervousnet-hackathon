@@ -58,27 +58,51 @@
 
 <script>
 function poll(){
+
   $.ajax({
-    url: "/api/rank/",
+    url: "/api/rank/entropy",
     success: function(data){
       //console.log(data);
       $(".entropy").empty();
-      for (var i = 0; i<data.entropy.length; i++) {
-        $(".entropy").append("<li><mark>" + data.entropy[i].team + "</mark><small>" + data.entropy[i].entropy + "</small></li>");
+      for (var i = 0; i<data.length; i++) {
+        $(".entropy").append("<li><mark>" + data[i].username + "</mark><small>" + data[i].meta.entropy.toFixed(2) + "</small></li>");
       }
-      $(".diversity").empty();
-      for (var i = 0; i<data.diversity.length; i++) {
-        $(".diversity").append("<li><mark>" + data.diversity[i].team + "</mark><small>" + data.diversity[i].diversity + "</small></li>");
-      }
-      $(".localerror").empty();
-      for (var i = 0; i<data.localerror.length; i++) {
-        $(".localerror").append("<li><mark>" + data.localerror[i].team + "</mark><small>" + data.localerror[i].localError + "</small></li>");
-      }
-      $(".globalerror").empty();
-      for (var i = 0; i<data.globalerror.length; i++) {
-        $(".globalerror").append("<li><mark>" + data.globalerror[i].team + "</mark><small>" + data.globalerror[i].globalError + "</small></li>");
-      }
+    },
+    dataType: "json"
+  });
 
+  $.ajax({
+    url: "/api/rank/diversity",
+    success: function(data){
+      //console.log(data);
+      $(".diversity").empty();
+      for (var i = 0; i<data.length; i++) {
+        $(".diversity").append("<li><mark>" + data[i].username + "</mark><small>" + data[i].meta.diversity.toFixed(2) + "</small></li>");
+      }
+    },
+    dataType: "json"
+  });
+
+  $.ajax({
+    url: "/api/rank/localerror",
+    success: function(data){
+      //console.log(data);
+      $(".localerror").empty();
+      for (var i = 0; i<data.length; i++) {
+        $(".localerror").append("<li><mark>" + data[i].username + "</mark><small>" + data[i].meta.localError.toFixed(2) + "</small></li>");
+      }
+    },
+    dataType: "json"
+  });
+
+  $.ajax({
+    url: "/api/rank/globalerror",
+    success: function(data){
+      //console.log(data);
+      $(".globalerror").empty();
+      for (var i = 0; i<data.length; i++) {
+        $(".globalerror").append("<li><mark>" + data[i].username + "</mark><small>" + data[i].meta.globalError.toFixed(2) + "</small></li>");
+      }
     },
     dataType: "json"
   });
@@ -86,7 +110,7 @@ function poll(){
 // Initial call
 poll();
 // Polling
-setInterval(poll, 3000);
+setInterval(poll, 4000);
 </script>
 
 {{> footer }}
