@@ -395,7 +395,6 @@ router.get('/rank/', function (req, res, next) {
       };
     });
     var rankLocalError = _.sortBy(localErrorData, 'localError');
-    rankLocalError = rankLocalError.reverse();
 
     var globalErrorData = _.map(users, function(team){
       return {
@@ -408,7 +407,7 @@ router.get('/rank/', function (req, res, next) {
     res.json({
       entropy     : rankEntropy.slice(0,5),
       diversity   : rankDiversity.slice(0,5),
-      localerror  : rankLocalError.slice(0,5),
+      localerror  : rankLocalError.slice(rankLocalError.length - 5),
       globalerror : rankGlobalError.slice(0,5)
     });
 
