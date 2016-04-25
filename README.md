@@ -1,4 +1,4 @@
-# NervousNet Hackathon - 2016
+# NervousNet Hackathon Challenge - Spring 2016
 
 ## Privacy/Accuracy Challenge
 Come up with your own data summarization algorithm that guarantees the highest privacy protection level and at the same time performs accurate data analytics.
@@ -21,8 +21,8 @@ Update package database (`brew update`)
 First, clone the repo:
 
 ```
-git clone https://github.com/pablovem/nervousnet-hackathon
-cd nervousnet-hackathon
+git clone https://github.com/pablovem/nervousnet-hackathon-challenge-2016.git
+cd nervousnet-hackathon-challenge-2016
 ```
 
 Then, install the deps:
@@ -61,8 +61,8 @@ gulp dev
 First, clone the repo:
 
 ```
-git clone https://github.com/pablovem/nervousnet-hackathon
-cd nervousnet-hackathon
+git clone https://github.com/pablovem/nervousnet-hackathon-challenge-2016.git
+cd nervousnet-hackathon-challenge-2016
 ```
 
 Then, install the deps:
