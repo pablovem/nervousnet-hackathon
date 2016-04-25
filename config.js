@@ -5,7 +5,8 @@ var config = {
     username : "",
     email: "",
     password : ""
-  }
+  },
+  timeSub : 5
 };
 
 module.exports = config;

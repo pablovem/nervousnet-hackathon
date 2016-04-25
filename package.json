@@ -1,6 +1,6 @@
 {
   "name": "nervousnet-hackathon",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "App for the Privacy/Accuracy Challenge - NervousNet Hackathon - Spring 2016",
   "main": "server.js",
   "repository": {
@@ -20,6 +20,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.13.0",
     "fast-csv": "^1.1.0",
+    "json2csv": "^3.3.0",
     "mongoose": "^4.4.7",
     "morgan": "^1.7.0",
     "multer": "^1.1.0",

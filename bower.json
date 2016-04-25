@@ -1,11 +1,11 @@
 {
   "name": "nervousnet-hackathon",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "https://github.com/pablovem/nervousnet-hackathon",
   "authors": [
     "pablovem"
   ],
-  "description": "Privacy/Accuracy Challenge - NervousNet Hackathon 2016",
+  "description": "App for the Privacy/Accuracy Challenge - NervousNet Hackathon - Spring 2016",
   "main": "server.js",
   "moduleType": [],
   "license": "MIT",
@@ -13,9 +13,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
     "bootstrap": "~3.3.6",

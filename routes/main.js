@@ -1,9 +1,9 @@
 /* Dependencies */
+var fs = require("fs");
+var json2csv = require('json2csv');
 var config = require('../config');
-
 var express = require('express');
 var router = express.Router();
-
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
@@ -29,7 +29,7 @@ router.get('/submission', function (req, res, next) {
       var elaptime =  Math.abs(currentRequest - lastSubmission);
       var minselaptime = elaptime/(1000*60);
       var display = {};
-      if(minselaptime > 5) {
+      if(minselaptime > config.timeSub) {
         display = {
           "message"       : "Now you can upload your submission",
           "minutes_since" : parseInt(minselaptime),
@@ -96,6 +96,52 @@ router.get('/admin/dashboard', function (req, res, next) {
       User.find({ role : 'Team'}, function (err, teams) {
         //console.log(teams);
         res.render('admin', { user: req.user, teams: teams });
+      });
+    } else {
+      res.redirect('/');
+    }
+  }
+});
+
+router.get('/admin/teamscsv', function (req, res, next) {
+  if(!req.user) {
+    res.redirect('/');
+  } else {
+    if(req.user.isAdmin){
+      // Create data
+      User.find({ role : 'Team'}, function (err, teams) {
+        //console.log(teams);
+
+        var fields = [ 'Team', 'Time', 'Submission', 'State', 'Entropy', 'Diversity', 'AvgLocalError', 'GlobalError' ];
+
+        for (var i = 0; i<teams.length; i++) {
+          var team = teams[i];
+          var teamdata =  [];
+          for(var sub=0; sub < team.submissions.length; sub++) {
+            var submission = team.submissions[sub];
+            teamdata.push({
+              'Team': team.username,
+              'Time': submission.submitted_at,
+              'Submission': submission.id,
+              'State':  submission.state,
+              'Entropy':  submission.entropy,
+              'Diversity':  submission.diversity,
+              'AvgLocalError': submission.localError,
+              'GlobalError': submission.globalError
+            });
+          }
+          // Create csv
+          json2csv({ data: teamdata, fields: fields }, function(err, csv) {
+            if (err) console.log(err);
+              fs.writeFile('./data/teamscsv/' + team.username + '.csv', csv, function(err) {
+                if (err) {
+                  console.log(err);
+                }
+                console.log('csv file saved');
+              });
+          });
+        }
+        res.redirect('/admin/dashboard');
       });
     } else {
       res.redirect('/');
