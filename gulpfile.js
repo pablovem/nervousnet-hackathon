@@ -9,6 +9,4 @@ gulp.task('watch:css', [], function(){
   gulp.watch('public/sass/**/*.scss', ['css'])
 })
 
-gulp.task('init', ['setup', 'css'])
-
 gulp.task('dev', ['watch:css', 'dev:server'])

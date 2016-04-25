@@ -47,8 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Serving static files
-app.set('views', './views')
-app.use(express.static('public'));
+app.set('views', './views');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set Models

@@ -75,7 +75,7 @@ bower install
 Almost done:
 
 ```
-gulp init
+gulp css
 ```
 
 ### Running
